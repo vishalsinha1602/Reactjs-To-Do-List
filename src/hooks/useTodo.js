@@ -10,6 +10,7 @@ export default function useTodos() {
         text,
         id: crypto.randomUUID(),
         completed: false,
+        pinned: false,
       },
     ];
 
@@ -39,6 +40,33 @@ export default function useTodos() {
     setTodo(newTodo);
   }
 
+  const isTodoSorted = todo.every((todo, index, arr) => {
+    return index == 0 || compareFunction(arr[index - 1], todo) <= 0;
+  });
+
+  function onTodoTextUpdate(id, todoText) {
+    const trimmed = todoText.trim();
+    if (trimmed === '') {
+      // Do nothing or optionally alert
+      return;
+    }
+
+    const newTodo = todo.map((item) => {
+      if (item.id === id) {
+        return { ...item, text: trimmed };
+      }
+      return item;
+    });
+    setTodo(newTodo);
+  }
+
+  function togglePin(id) {
+    const newTodo = todo.map((item) =>
+      item.id === id ? { ...item, pinned: !item.pinned } : item
+    );
+    setTodo(newTodo);
+  }
+
   return {
     todo,
     addTodo,
@@ -46,5 +74,8 @@ export default function useTodos() {
     deleteTodo,
     clearAllTodo,
     sortAllTodo,
+    isTodoSorted,
+    onTodoTextUpdate,
+    togglePin,
   };
 }

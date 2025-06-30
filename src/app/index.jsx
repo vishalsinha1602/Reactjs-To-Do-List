@@ -3,8 +3,17 @@ import useTodos from '../hooks/useTodo';
 import TodoItem from '../components/TodoItem';
 
 const App = () => {
-  const { todo, addTodo, toggleTodo, deleteTodo, clearAllTodo, sortAllTodo } =
-    useTodos();
+  const {
+    todo,
+    addTodo,
+    toggleTodo,
+    deleteTodo,
+    clearAllTodo,
+    sortAllTodo,
+    isTodoSorted,
+    onTodoTextUpdate,
+    togglePin,
+  } = useTodos();
 
   const totalTaskCount = todo.length;
   const completedTaskCount = todo.filter((t) => t.completed).length;
@@ -23,13 +32,13 @@ const App = () => {
     <div className="flex justify-center items-center min-h-screen bg-black/90 px-4">
       <div className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg">
         {/* Title */}
-        <h1 className="text-2xl font-bold mb-4 text-gray-800">
-          Not just a normal - React js Todo
+        <h1 className="text-2xl font-bold bungee-regular mb-4 text-gray-800 text-center">
+          Not just a normal - Todo
         </h1>
         {/* Completed task count */}
-        <div className="flex items-center justify-between mb-2 px-3 py-2 bg-green-100 rounded-lg shadow-inner transition-all duration-300">
+        <div className="flex items-center justify-between bungee-regular mb-2 px-3 py-2 bg-green-100 rounded-lg shadow-inner transition-all duration-300">
           {totalTaskCount === 0 ? (
-            <span className="text-green-700 font-semibold text-sm md:text-base flex items-center gap-2">
+            <span className="text-green-700  font-semibold text-sm md:text-base flex items-center gap-2">
               Small steps. Big progress.
             </span>
           ) : totalTaskCount === completedTaskCount ? (
@@ -63,22 +72,19 @@ const App = () => {
           ' '
         )}
 
-        {/* sort todo0 */}
-        {totalTaskCount > 1 ? (
+        {!isTodoSorted && (
           <button
             onClick={sortAllTodo}
             className="bg-red-500 cursor-pointer mx-5 hover:bg-red-600 text-white rounded px-3 py-1 text-sm font-medium transition mb-4"
           >
             Sort Todo
           </button>
-        ) : (
-          ' '
         )}
 
         {/* Add Todo Form */}
         <form onSubmit={handleFormSubmit} className="flex space-x-2 mb-4">
           <input
-            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="flex-1 border  border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
             type="text"
             name="todo"
             placeholder="Enter the Task"
@@ -92,14 +98,22 @@ const App = () => {
         </form>
         {totalTaskCount !== 0 ? (
           <ul className="space-y-2">
-            {todo.map((item) => (
-              <TodoItem
-                key={item.id}
-                items={item}
-                onTodoToggle={toggleTodo}
-                onTodoDelete={deleteTodo}
-              />
-            ))}
+            {[...todo]
+              .sort((a, b) => {
+                // pinned first
+                if (a.pinned === b.pinned) return 0;
+                return a.pinned ? -1 : 1;
+              })
+              .map((item) => (
+                <TodoItem
+                  key={item.id}
+                  items={item}
+                  onTodoToggle={toggleTodo}
+                  onTodoDelete={deleteTodo}
+                  onTodoTextUpdate={onTodoTextUpdate}
+                  onPinToggle={togglePin}
+                />
+              ))}
           </ul>
         ) : (
           <ul>
