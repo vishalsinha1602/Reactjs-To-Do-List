@@ -22,7 +22,7 @@ const TodoItem = ({
       <form onSubmit={onTodoEdit}>
         <input
           type="text"
-          className="flex-1 border border-gray-300 focus:outline-none rounded px-2 py-2 mr-3"
+          className="flex-1  border-gray-300 focus:outline-none rounded px-2 py-2 mr-3"
           defaultValue={items.text}
           name="todo"
           autoFocus
