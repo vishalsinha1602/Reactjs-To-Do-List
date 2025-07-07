@@ -1,6 +1,5 @@
-import React from 'react';
 import useTodos from '../hooks/useTodo';
-import TodoItem from '../components/TodoItem';
+import TodoItem from '../components/todoItem';
 
 const App = () => {
   const {

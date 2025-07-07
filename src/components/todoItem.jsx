@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Pin, PinOff } from 'lucide-react';
 
 const TodoItem = ({
